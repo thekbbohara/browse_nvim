@@ -1,4 +1,4 @@
--- lua/hello/init.lua
+-- lua/browse/init.lua
 
 local M = {}
 local function hello()
