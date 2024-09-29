@@ -27,7 +27,7 @@ local function get_current_mode()
 	-- Switch to normal mode and get the current mode
 	vim.cmd("normal! gv") -- Reselect the visual selection
 	local mode = vim.api.nvim_get_mode().mode -- Get current mode
-	print("mode " .. mode)
+	-- print("mode " .. mode)
 	return mode
 end
 local function vExtractSelectedText()
@@ -68,10 +68,10 @@ end
 function M.googleQuery()
 	local query = getSelectedText()
 	if query == "" then
-		print("unable to getSelectedText")
+		-- print("unable to getSelectedText")
 		return
 	end
-	print("query " .. query)
+	-- print("query " .. query)
 	local isValidLink = ping(query)
 	if isValidLink == false then
 		query = "https://google.com/search?q=" .. query
@@ -81,14 +81,14 @@ end
 
 -- testurl: https://github.com/thekbbohara
 
--- Create a user command to invoke the function
-vim.api.nvim_create_user_command("Browse", M.googleQuery, { range = true })
-vim.api.nvim_create_user_command("CurrentMode", get_current_mode, { range = true })
-
--- Set up the key mapping for the Browse command
-vim.keymap.set({ "n", "v" }, "gx", ":Browse<CR>", { noremap = true, silent = true })
-
 function M.setup()
+	-- Create a user command to invoke the function
+	vim.api.nvim_create_user_command("Browse", M.googleQuery, { range = true })
+	vim.api.nvim_create_user_command("CurrentMode", get_current_mode, { range = true })
+
+	-- Set up the key mapping for the Browse command
+	vim.keymap.set({ "n", "v" }, "gx", ":Browse<CR>", { noremap = true, silent = true })
+
 	vim.api.nvim_create_user_command("Hello", hello, { range = true })
 end
 
