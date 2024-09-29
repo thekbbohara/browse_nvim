@@ -4,9 +4,10 @@
 
 ```lua
 return {
-	"thekbbohara/browse_nvim",
-	config = function()
-		require("hello").setup()
-	end,
+  "thekbbohara/browse_nvim",
+  config = function()
+	require("hello").setup()
+  end,
 }
+
 ```
