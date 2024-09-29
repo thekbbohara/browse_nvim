@@ -1,5 +1,5 @@
 # browse_nvim
-
+![image](./browse.gif)
 -- using lazy plugin manager
 
 ```lua
