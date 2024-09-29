@@ -109,13 +109,8 @@ end
 -- testurl: https://github.com/thekbbohara
 
 function M.setup()
-	-- Create a user command to invoke the function
 	vim.api.nvim_create_user_command("QueryGoogle", M.googleQuery, { range = true })
 	vim.api.nvim_create_user_command("GoToLink", M.gotoLink, { range = true })
-	-- vim.api.nvim_create_user_command("CurrentMode", get_current_mode, { range = true })
-	-- Set up the key mapping for the Browse command
-	vim.keymap.set({ "v" }, "gq", ":QueryGoogle<CR>", { noremap = true, silent = true })
-	vim.keymap.set({ "n","v" }, "gx", ":GoToLink<CR>", { noremap = true, silent = true })
 end
 
 return M
