@@ -1,9 +1,5 @@
 -- lua/browse/init.lua
-
 local M = {}
-local function hello()
-	print("Hello from the hello plugin!")
-end
 local function extractLink(query)
 	local link = query
 	if string.find(link, "//") then
@@ -61,7 +57,7 @@ local function getSelectedText()
 	else
 		-- local line = vim.api.nvim_get_current_line()
 		local current_word = vim.fn.expand("<c-word>")
-		print("current_word" .. current_word)
+		-- print("current_word" .. current_word)
 		return current_word
 	end
 end
@@ -89,7 +85,6 @@ function M.setup()
 	-- Set up the key mapping for the Browse command
 	vim.keymap.set({ "n", "v" }, "gx", ":Browse<CR>", { noremap = true, silent = true })
 
-	vim.api.nvim_create_user_command("Hello", hello, { range = true })
 end
 
 return M
