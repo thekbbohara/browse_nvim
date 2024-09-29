@@ -1,6 +1,6 @@
 -- lua/browse/init.lua
 local M = {}
-local function extractLink(query)
+--[[ local function extractLink(query)
 	local link = query
 	if string.find(link, "//") then
 		link = link:match("//(.+)") -- Extract part after '//' using pattern matching
@@ -13,19 +13,19 @@ local function extractLink(query)
 		end
 	end
 	return link
-end
-local function ping(url)
+end ]]
+--[[ local function ping(url)
 	local cmd = string.format("ping -c 1 %s > /dev/null 2>&1", extractLink(url))
 	local result = os.execute(cmd)
 	return result == 0 -- returns true if the ping is successful
-end
-local function get_current_mode()
+end ]]
+--[[ local function get_current_mode()
 	-- Switch to normal mode and get the current mode
 	vim.cmd("normal! gv") -- Reselect the visual selection
 	local mode = vim.api.nvim_get_mode().mode -- Get current mode
 	-- print("mode " .. mode)
 	return mode
-end
+end ]]
 local function vExtractSelectedText()
 	-- Get the start and end positions of the visual selection
 	local vstart = vim.fn.getpos("'<")
@@ -49,42 +49,73 @@ local function vExtractSelectedText()
 	end
 	return selected_text
 end
-local function getSelectedText()
-	local current_mode = get_current_mode()
-	if current_mode == "v" then
-		local selected_text = vExtractSelectedText()
-		return selected_text
-	else
-		-- local line = vim.api.nvim_get_current_line()
-		local current_word = vim.fn.expand("<c-word>")
-		-- print("current_word" .. current_word)
-		return current_word
-	end
-end
+-- local function getSelectedText()
+-- local current_mode = get_current_mode()
+-- if current_mode == "v" then
+-- local selected_text = vExtractSelectedText()
+-- return selected_text
+-- else
+-- local line = vim.api.nvim_get_current_line()
+-- local current_word = vim.fn.expand("<c-word>")
+-- print("current_word" .. current_word)
+-- return current_word
+-- end
+-- end
 function M.googleQuery()
-	local query = getSelectedText()
+	local query = vExtractSelectedText()
 	if query == "" then
-		-- print("unable to getSelectedText")
+		print("unable to getSelectedText")
 		return
 	end
 	-- print("query " .. query)
-	local isValidLink = ping(query)
-	if isValidLink == false then
-		query = "https://google.com/search?q=" .. query
-	end
+	-- local isValidLink = ping(query)
+	-- if isValidLink == false then
+	query = "https://google.com/search?q=" .. query
+	-- end
 	vim.fn.jobstart({ "google-chrome-stable", query })
+end
+
+local function getLink()
+	-- Get the current line under the cursor
+	local line = vim.api.nvim_get_current_line()
+
+	-- Get the cursor position
+	local cursor_col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-based indexing
+
+	-- Find the start position (the space before the cursor)
+	local start_pos = cursor_col
+	while start_pos > 1 and line:sub(start_pos - 1, start_pos - 1) ~= " " do
+		start_pos = start_pos - 1
+	end
+
+	-- Find the end position (the space after the cursor)
+	local end_pos = cursor_col
+	while end_pos <= #line and line:sub(end_pos, end_pos) ~= " " do
+		end_pos = end_pos + 1
+	end
+
+	-- Extract the URL or text between the spaces
+	local link = line:sub(start_pos, end_pos - 1)
+
+	-- Print or return the link
+	print(link)
+	return link
+end
+
+function M.gotoLink()
+	getLink()
 end
 
 -- testurl: https://github.com/thekbbohara
 
 function M.setup()
 	-- Create a user command to invoke the function
-	vim.api.nvim_create_user_command("Browse", M.googleQuery, { range = true })
-	vim.api.nvim_create_user_command("CurrentMode", get_current_mode, { range = true })
-
+	vim.api.nvim_create_user_command("QueryGoogle", M.googleQuery, { range = true })
+	vim.api.nvim_create_user_command("GoToLink", M.gotoLink, { range = true })
+	-- vim.api.nvim_create_user_command("CurrentMode", get_current_mode, { range = true })
 	-- Set up the key mapping for the Browse command
-	vim.keymap.set({ "n", "v" }, "gx", ":Browse<CR>", { noremap = true, silent = true })
-
+	vim.keymap.set({ "v" }, "gq", ":QueryGoogle<CR>", { noremap = true, silent = true })
+	vim.keymap.set({ "n" }, "gx", ":GoToLink<CR>", { noremap = true, silent = true })
 end
 
 return M
