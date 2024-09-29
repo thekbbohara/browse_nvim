@@ -1,1 +1,9 @@
-print("Hello from our plugin")
+-- lua/hello/init.lua
+
+local M = {}
+
+function M.setup()
+	print("Hello from the hello plugin!")
+end
+
+return M
