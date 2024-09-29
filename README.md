@@ -6,7 +6,7 @@
 return {
   "thekbbohara/browse_nvim",
   config = function()
-	require("hello").setup()
+	require("browse").setup()
   end,
   vim.keymap.set({ "v" }, "gq", ":QueryGoogle<CR>", { noremap = true, silent = true }),
   vim.keymap.set({ "n", "v" }, "gx", ":GoToLink<CR>", { noremap = true, silent = true })
