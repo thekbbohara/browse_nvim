@@ -98,12 +98,12 @@ local function getLink()
 	local link = line:sub(start_pos, end_pos - 1)
 
 	-- Print or return the link
-	print(link)
 	return link
 end
 
 function M.gotoLink()
-	getLink()
+  local url = getLink()
+	vim.fn.jobstart({ "google-chrome-stable", url })
 end
 
 -- testurl: https://github.com/thekbbohara
@@ -115,7 +115,7 @@ function M.setup()
 	-- vim.api.nvim_create_user_command("CurrentMode", get_current_mode, { range = true })
 	-- Set up the key mapping for the Browse command
 	vim.keymap.set({ "v" }, "gq", ":QueryGoogle<CR>", { noremap = true, silent = true })
-	vim.keymap.set({ "n" }, "gx", ":GoToLink<CR>", { noremap = true, silent = true })
+	vim.keymap.set({ "n","v" }, "gx", ":GoToLink<CR>", { noremap = true, silent = true })
 end
 
 return M
